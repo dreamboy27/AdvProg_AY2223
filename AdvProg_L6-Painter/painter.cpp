@@ -1,14 +1,17 @@
 #include "painter.h"
 
 /***
-    Args: color (SDL_Color): color value 
+    Args: color (SDL_Color): color value
         
     Returns:
         None
 ***/
-void Painter::setColor(SDL_Color color) 
-{ 
-    // TODO: set the color value for the Painter and set Render Draw Color
+void Painter::setColor(SDL_Color color)
+{
+    // set the color value for the Painter and set Render Draw Color
+    this->color=color;
+    SDL_SetRenderDrawColor(this->renderer,color.r,color.g,color.b,color.a);
+    
 }
 
 
@@ -20,7 +23,10 @@ void Painter::setColor(SDL_Color color)
 ***/
 void Painter::jumpForward(int numPixel)
 {
-    // TODO: jump the painter forward
+    // jump the painter forward
+    this->x += numPixel*cos( this->angle * M_PI / 180 );
+    this->y -= numPixel*sin( this->angle * M_PI / 180 );
+    
 }
 
 
@@ -32,7 +38,9 @@ void Painter::jumpForward(int numPixel)
 ***/
 void Painter::jumpBackward(int numPixel)
 {
-    // TODO: jump the painter backward
+    // jump the painter backward
+    this->x -=numPixel*cos( this->angle * M_PI / 180 );
+    this->y +=numPixel*sin( this->angle * M_PI / 180 );
 }
 
 
@@ -41,10 +49,11 @@ void Painter::jumpBackward(int numPixel)
         
     Returns:
         None
-***/       
+***/
 void Painter::turnLeft(double degree)
 {
-    // TODO: rotate left the painter   
+    // rotate left the painter
+    this->angle = fmod(this->angle + degree, 360.0);
 }
 
 
@@ -53,21 +62,25 @@ void Painter::turnLeft(double degree)
         
     Returns:
         None
-***/     
+***/
 void Painter::turnRight(double degree)
 {
-    // TODO: rotate right the painter   
+    // rotate right the painter
+    this->angle = fmod(this->angle - degree, 360.0);
 }
 
-/***  
-    Args: 
+/***
+    Args:
         None
     Returns:
         None
 ***/
 void Painter::randomColor()
 {
-    // TODO: set random color    
+    // set random color
+    Uint8 r = rand()%256, g = rand()%256, b = rand()%256;
+    SDL_Color ans = {r, g, b};
+    setColor(ans);
 }
 
 
@@ -78,10 +91,9 @@ void Painter::clearWithBgColor(SDL_Color bgColor)
 {
     SDL_Color curColor = color;
     setColor(bgColor);
-	SDL_RenderClear(renderer);    
+    SDL_RenderClear(renderer);
     setColor(curColor);
 }
-
 
 Painter::Painter(SDL_Window* window, SDL_Renderer *renderer)
 {
@@ -166,4 +178,3 @@ void Painter::moveBackward(int numPixel)
 {
     moveForward(-numPixel);
 }
-
